@@ -11,7 +11,7 @@ export default props => {
                 <td className={todo.done ? 'markedAsDone' :  ''}>
                     {todo.description}
                 </td>
-                <td>
+                <td className='tableActions'>
                     <IconButton style='sucess' icon='check' hide={todo.done}
                         onClick={() => props.handleMarkAsDone(todo)}
                     />
