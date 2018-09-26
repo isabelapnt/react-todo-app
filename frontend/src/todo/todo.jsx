@@ -11,7 +11,9 @@ export default class Todo extends Component{
     constructor(props){
         super(props)
         this.state = {description: '', list: []}
+
         this.handleAdd = this.handleAdd.bind(this)
+        this.handleSearch = this.handleSearch.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.handleRemove = this.handleRemove.bind(this)
         this.handleMarkAsDone = this.handleMarkAsDone.bind(this)
@@ -20,27 +22,33 @@ export default class Todo extends Component{
         this.refresh()
     }
 
-    refresh(){
-        axios.get(`${URL}?sort=-createdAt`)
+    refresh(description = ''){
+        const search = description ? `&description__regex=/${description}/` : ''
+        axios.get(`${URL}?sort=-createdAt${search}`)
             .then( res => this.setState(
-                    {...this.state, description: '', list: res.data}
+                    {...this.state, description, list: res.data}
                 )
             )
     }
 
+    handleSearch(){
+        console.log(this.state.description)
+        this.refresh(this.state.description)
+    }
+
     handleMarkAsDone(todo){
         axios.put(`${URL}/${todo._id}`, {...todo, done: true})
-            .then( resp => this.refresh())
+            .then( resp => this.refresh(this.state.description))
     }
 
     handleMarkAsPending(todo){
         axios.put(`${URL}/${todo._id}`, {...todo, done: false})
-            .then( resp => this.refresh())
+            .then( resp => this.refresh(this.state.description))
     }
 
     handleRemove(todo){
         axios.delete(`${URL}/${todo._id}`)
-        .then(res => this.refresh())
+        .then(res => this.refresh(this.state.description))
     }
 
     handleChange(e){
@@ -59,6 +67,7 @@ export default class Todo extends Component{
                 <PageHeader name='Todos' small="register" />
                 <TodoForm 
                     description={this.state.description}
+                    handleSearch={this.handleSearch}
                     handleChange={this.handleChange}
                     handleAdd={this.handleAdd}
                 />
