@@ -13,6 +13,10 @@ class TodoForm extends Component {
         this.keyHandler = this.keyHandler.bind(this)
     }
 
+    componentWillMount(){
+        this.props.search()
+    }
+
     keyHandler(e){
         if(e.key === 'Enter'){
             e.shiftKey ? this.props.handleSearch() : this.props.handleAdd()
