@@ -44,7 +44,6 @@ export const markedAsPeding = (todo) => {
 export const remove = (todo) => {
     return dispatch => {
         axios.delete(`${URL}/${todo._id}`)
-        .then(resp => dispatch({type: 'TODO_REMOVE', payload: resp.data}))
         .then(resp => dispatch(search()))
     }
 }
